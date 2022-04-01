@@ -1,5 +1,6 @@
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.security.InvalidParameterException;
 import java.util.*;
@@ -16,7 +17,7 @@ class Main {
     private Queue<Integer> nums = new LinkedList<>();
     BlockingQueue<Integer> tasks = new ArrayBlockingQueue<>(10);
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         Main m = new Main();
         Producer p = new Producer(m.tasks);
         Consumer c = new Consumer(m.tasks);
@@ -66,7 +67,7 @@ class Main {
         c.Stop();
     }
 
-    public void executeOption(Producer p, Consumer c) {
+    public void executeOption(Producer p, Consumer c) throws IOException {
         askForOption();
         if (option == 4) {
             exitExecution(p, c);
@@ -81,9 +82,13 @@ class Main {
         p.wakeUp();
     }
 
-    public void askForOption() {
+    public void askForOption() throws IOException {
         System.out.print("Enter Option Number: ");
         option = s1.nextInt();
+
+        if (option < 1 || option > 4) {
+            throw new IOException();
+        }
     }
 
     public void askForValue() {
